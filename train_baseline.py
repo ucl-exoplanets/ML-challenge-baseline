@@ -4,17 +4,20 @@ from utils import ArielMLDataset, ChallengeMetric, Baseline, simple_transform
 from torch.utils.data.dataloader import DataLoader
 from torch.nn import MSELoss
 from torch.optim import Adam
+import pathlib
 
+
+project_dir = pathlib.Path(__file__).parent.absolute()
 
 # paths to data dirs
-lc_train_path = "data/noisy_train/home/ucapats/Scratch/ml_data_challenge/training_set/noisy_train"
-params_train_path = "data/params_train/home/ucapats/Scratch/ml_data_challenge/training_set/params_train"
-lc_test_path = "data/home/noisy_test/home/ucapats/Scratch/ml_data_challenge/test_set/noisy_test"
+lc_train_path = project_dir / "data/noisy_train/home/ucapats/Scratch/ml_data_challenge/training_set/noisy_train"
+params_train_path = project_dir / "data/params_train/home/ucapats/Scratch/ml_data_challenge/training_set/params_train"
 
 # training parameters
 train_size = 16
 val_size = 16
 epochs = 3
+save_from = 10
 
 # hyper-parameters
 H1 = 1024
@@ -37,7 +40,6 @@ if __name__ == '__main__':
     batch_size = int(train_size / 4)
     loader_train = DataLoader(dataset_train, batch_size=batch_size, shuffle=True)
     loader_val = DataLoader(dataset_val, batch_size=batch_size)
-    loader_eval = DataLoader(dataset_eval, batch_size=batch_size)
 
     # Define baseline model
     baseline = Baseline(H1=H1, H2=H2).double().to(device)
@@ -53,38 +55,38 @@ if __name__ == '__main__':
     val_scores = []
     best_val_score = 0.
 
-    for epoch in range(epochs):
+    for epoch in range(1, 1+epochs):
         print("epoch", epoch)
         train_loss = 0
         val_loss = 0
         val_score = 0
-        baseline.train()
         for k, item in enumerate(loader_train):
             pred = baseline(item['lc'])
             loss = loss_function(item['target'], pred)
             opt.zero_grad()
             loss.backward()
             opt.step()
-            train_loss += loss.item()
+            train_loss += loss.detach().item()
         train_loss = train_loss / len(loader_train)
-        baseline.eval()
         for k, item in enumerate(loader_val):
             pred = baseline(item['lc'])
             loss = loss_function(item['target'], pred)
             score = challenge_metric.score(item['target'], pred)
-            val_loss += loss.item()
-            val_score += score.item()
+            val_loss += loss.detach().item()
+            val_score += score.detach().item()
         val_loss /= len(loader_val)
         val_score /= len(loader_val)
         print('Training loss', round(train_loss, 6))
         print('Val loss', round(val_loss, 6))
         print('Val score', round(val_score, 2))
-
         train_losses += [train_loss]
         val_losses += [val_loss]
         val_scores += [val_score]
 
-    np.savetxt('outputs/train_losses.txt', np.array(train_losses))
-    np.savetxt('outputs/val_losses.txt', np.array(val_losses))
-    np.savetxt('outputs/val_scores.txt', np.array(val_scores))
-    torch.save(baseline, 'outputs/model_state.pt')
+        if epoch >= save_from and val_score > best_val_score:
+            torch.save(baseline, project_dir / 'outputs/model_state.pt')
+
+    np.savetxt(project_dir / 'outputs/train_losses.txt', np.array(train_losses))
+    np.savetxt(project_dir / 'outputs/val_losses.txt', np.array(val_losses))
+    np.savetxt(project_dir / 'outputs/val_scores.txt', np.array(val_scores))
+    torch.save(baseline, project_dir / 'outputs/model_state.pt')
