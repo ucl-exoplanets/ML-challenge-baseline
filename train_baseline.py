@@ -84,6 +84,7 @@ if __name__ == '__main__':
         val_scores += [val_score]
 
         if epoch >= save_from and val_score > best_val_score:
+            best_val_score = val_score
             torch.save(baseline, project_dir / 'outputs/model_state.pt')
 
     np.savetxt(project_dir / 'outputs/train_losses.txt', np.array(train_losses))
