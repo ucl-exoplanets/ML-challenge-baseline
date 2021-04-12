@@ -14,10 +14,10 @@ lc_train_path = project_dir / "data/noisy_train/home/ucapats/Scratch/ml_data_cha
 params_train_path = project_dir / "data/params_train/home/ucapats/Scratch/ml_data_challenge/training_set/params_train"
 
 # training parameters
-train_size = 16
-val_size = 16
-epochs = 3
-save_from = 10
+train_size = 512
+val_size = 512
+epochs = 70
+save_from = 20
 
 # hyper-parameters
 H1 = 1024
@@ -60,6 +60,7 @@ if __name__ == '__main__':
         train_loss = 0
         val_loss = 0
         val_score = 0
+        baseline.train()
         for k, item in enumerate(loader_train):
             pred = baseline(item['lc'])
             loss = loss_function(item['target'], pred)
@@ -68,6 +69,7 @@ if __name__ == '__main__':
             opt.step()
             train_loss += loss.detach().item()
         train_loss = train_loss / len(loader_train)
+        baseline.eval()
         for k, item in enumerate(loader_val):
             pred = baseline(item['lc'])
             loss = loss_function(item['target'], pred)
