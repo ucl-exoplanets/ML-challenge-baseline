@@ -7,9 +7,9 @@ from torch.optim import Adam
 
 
 # paths to data dirs
-lc_train_path = ...
-params_train_path = ...
-lc_test_path = ...
+lc_train_path = "data/noisy_train/home/ucapats/Scratch/ml_data_challenge/training_set/noisy_train"
+params_train_path = "data/params_train/home/ucapats/Scratch/ml_data_challenge/training_set/params_train"
+lc_test_path = "data/home/noisy_test/home/ucapats/Scratch/ml_data_challenge/test_set/noisy_test"
 
 # training parameters
 train_size = 16
