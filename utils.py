@@ -1,7 +1,6 @@
 """Define generic classes and functions to facilitate baseline construction"""
 import os
 import numpy as np
-import matplotlib.pylab as plt
 import torch
 
 from pathlib import Path
