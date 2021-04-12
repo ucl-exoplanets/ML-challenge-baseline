@@ -1,3 +1,4 @@
+"""Define and train the baseline model"""
 import numpy as np
 import torch
 from utils import ArielMLDataset, ChallengeMetric, Baseline, simple_transform

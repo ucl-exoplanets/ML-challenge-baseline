@@ -14,7 +14,7 @@ n_timesteps = 300
 class ArielMLDataset(Dataset):
     def __init__(self, lc_path, params_path=None, transform=None, start_ind=0,
                  max_size=int(1e9), shuffle=True, seed=None, device=None):
-        """Dataset to read files for the Ariel ML Data challenge 2021
+        """Create a dataset to read files for the Ariel ML Data challenge 2021
 
         Args:
             lc_path: str
@@ -88,9 +88,27 @@ def simple_transform(x):
 
 class ChallengeMetric:
     def __init__(self, weights=None):
+        """Create a callable object close to the Challenge's metric score
+
+        __call__ method returns the error and score method returns the unweighted challenge metric
+
+        Args:
+            weights: iterable
+                iterable containing the weights for each observation point (default None will create unity weights)
+        """
         self.weights = weights
 
     def __call__(self, y, pred):
+        """Return the unweighted error related to the challenge, as defined (here)[https://www.ariel-datachallenge.space/ML/documentation/scoring]
+
+        Args:
+            y: torch.Tensor
+                target tensor
+            pred: torch.Tensor
+                prediction tensor, same shape as y
+        Return: torch.tensor
+            error tensor (itemisable), min value = 0
+        """
         y = y
         pred = pred
         if self.weights is None:
@@ -101,6 +119,16 @@ class ChallengeMetric:
         return (weights * y * torch.abs(pred - y)).sum() / weights.sum() * 1e6
 
     def score(self, y, pred):
+        """Return the unweighted score related to the challenge, as defined (here)[https://www.ariel-datachallenge.space/ML/documentation/scoring]
+
+        Args:
+            y: torch.Tensor
+                target tensor
+            pred: torch.Tensor
+                prediction tensor, same shape as y
+        Return: torch.tensor
+            score tensor (itemisable), max value = 10000
+        """
         y = y
         pred = pred
         if self.weights is None:
@@ -113,6 +141,18 @@ class ChallengeMetric:
 
 class Baseline(Module):
     def __init__(self, H1=1024, H2=256, input_dim=n_wavelengths*n_timesteps, output_dim=n_wavelengths):
+        """Define the baseline model for the Ariel data challenge 2021
+
+        Args:
+            H1: int
+                first hidden dimension (default=1024)
+            H2: int
+                second hidden dimension (default=256)
+            input_dim: int
+                input dimension (default = 55*300)
+            ourput_dim: int
+                output dimension (default = 55)
+        """
         super().__init__()
         self.network = Sequential(torch.nn.Linear(input_dim, H1),
                                   torch.nn.ReLU(),
@@ -122,6 +162,7 @@ class Baseline(Module):
                                   )
 
     def __call__(self, x):
+        """Predict rp/rs from input tensor light curve x"""
         out = torch.flatten(x, start_dim=1)  # Need to flatten out the input light curves for this type network
         out = self.network(out)
         return out
