@@ -5,10 +5,9 @@ This code makes use of [numpy](https://github.com/numpy/numpy) and [pytorch](htt
 
 ## Repository content
 
-
 - ```download_data.sh``` contains a shell script to download and extract the challenge's data
 - ```utils.py``` contains different classes and functions:
-    - ```ArielMLDataset``` to access the [data](https://github.com/pytorch/pytorch) and feed it to our ML pipeline,
+    - ```ArielMLDataset``` to access the [data](https://www.ariel-datachallenge.space/ML/documentation/data) and feed it to our ML pipeline,
     - ```simple_transform``` to preprocess the data,
     - ```ChallengeMetric``` to define a scoring criterion following the general formula in the [documentation](https://www.ariel-datachallenge.space/ML/documentation/scoring) ,
     - ```Baseline``` which inherit ```torch.nn.Module``` class and defines the baseline solution.
