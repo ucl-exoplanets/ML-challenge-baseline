@@ -12,9 +12,10 @@ n_timesteps = 300
 
 
 class ArielMLDataset(Dataset):
+    """Class for reading files for the Ariel ML data challenge 2021"""
     def __init__(self, lc_path, params_path=None, transform=None, start_ind=0,
                  max_size=int(1e9), shuffle=True, seed=None, device=None):
-        """Create a dataset to read files for the Ariel ML Data challenge 2021
+        """Create a pytorch dataset to read files for the Ariel ML Data challenge 2021
 
         Args:
             lc_path: str
@@ -87,6 +88,7 @@ def simple_transform(x):
 
 
 class ChallengeMetric:
+    """Class for challenge metric"""
     def __init__(self, weights=None):
         """Create a callable object close to the Challenge's metric score
 
@@ -140,6 +142,7 @@ class ChallengeMetric:
 
 
 class Baseline(Module):
+    """Baseline model for Ariel ML data challenge 2021"""
     def __init__(self, H1=1024, H2=256, input_dim=n_wavelengths*n_timesteps, output_dim=n_wavelengths):
         """Define the baseline model for the Ariel data challenge 2021
 
