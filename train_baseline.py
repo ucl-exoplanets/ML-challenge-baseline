@@ -7,12 +7,16 @@ from torch.nn import MSELoss
 from torch.optim import Adam
 import pathlib
 
+__author__ = "Mario Morvan"
+__email__ = "mario.morvan.18@ucl.ac.uk"
 
 project_dir = pathlib.Path(__file__).parent.absolute()
 
 # paths to data dirs
-lc_train_path = project_dir / "data/noisy_train/home/ucapats/Scratch/ml_data_challenge/training_set/noisy_train"
-params_train_path = project_dir / "data/params_train/home/ucapats/Scratch/ml_data_challenge/training_set/params_train"
+lc_train_path = project_dir / \
+    "data/noisy_train/home/ucapats/Scratch/ml_data_challenge/training_set/noisy_train"
+params_train_path = project_dir / \
+    "data/params_train/home/ucapats/Scratch/ml_data_challenge/training_set/params_train"
 
 # training parameters
 train_size = 512
@@ -39,7 +43,8 @@ if __name__ == '__main__':
 
     # Loaders
     batch_size = int(train_size / 4)
-    loader_train = DataLoader(dataset_train, batch_size=batch_size, shuffle=True)
+    loader_train = DataLoader(
+        dataset_train, batch_size=batch_size, shuffle=True)
     loader_val = DataLoader(dataset_val, batch_size=batch_size)
 
     # Define baseline model
@@ -90,7 +95,8 @@ if __name__ == '__main__':
             best_val_score = val_score
             torch.save(baseline, project_dir / 'outputs/model_state.pt')
 
-    np.savetxt(project_dir / 'outputs/train_losses.txt', np.array(train_losses))
+    np.savetxt(project_dir / 'outputs/train_losses.txt',
+               np.array(train_losses))
     np.savetxt(project_dir / 'outputs/val_losses.txt', np.array(val_losses))
     np.savetxt(project_dir / 'outputs/val_scores.txt', np.array(val_scores))
     torch.save(baseline, project_dir / 'outputs/model_state.pt')

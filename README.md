@@ -48,3 +48,6 @@ None of these have been performed to produce thie baseline, leaving several pote
 - comparison with classical techniques
 
 Although the data challenge has changed, various ideas to improve this model may be found in the [paper from 2019's ECML competition](https://arxiv.org/abs/2010.15996).
+
+## Contact
+For any question regarding the baseline solution: mario.morvan.18@ucl.ac.uk

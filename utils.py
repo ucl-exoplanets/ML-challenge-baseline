@@ -7,12 +7,17 @@ from pathlib import Path
 from torch.utils.data import Dataset
 from torch.nn import Module, Sequential
 
+__author__ = "Mario Morvan"
+__email__ = "mario.morvan.18@ucl.ac.uk"
+
+
 n_wavelengths = 55
 n_timesteps = 300
 
 
 class ArielMLDataset(Dataset):
     """Class for reading files for the Ariel ML data challenge 2021"""
+
     def __init__(self, lc_path, params_path=None, transform=None, start_ind=0,
                  max_size=int(1e9), shuffle=True, seed=None, device=None):
         """Create a pytorch dataset to read files for the Ariel ML Data challenge 2021
@@ -89,6 +94,7 @@ def simple_transform(x):
 
 class ChallengeMetric:
     """Class for challenge metric"""
+
     def __init__(self, weights=None):
         """Create a callable object close to the Challenge's metric score
 
@@ -143,6 +149,7 @@ class ChallengeMetric:
 
 class Baseline(Module):
     """Baseline model for Ariel ML data challenge 2021"""
+
     def __init__(self, H1=1024, H2=256, input_dim=n_wavelengths*n_timesteps, output_dim=n_wavelengths):
         """Define the baseline model for the Ariel data challenge 2021
 
@@ -166,6 +173,7 @@ class Baseline(Module):
 
     def __call__(self, x):
         """Predict rp/rs from input tensor light curve x"""
-        out = torch.flatten(x, start_dim=1)  # Need to flatten out the input light curves for this type network
+        out = torch.flatten(
+            x, start_dim=1)  # Need to flatten out the input light curves for this type network
         out = self.network(out)
         return out
