@@ -20,21 +20,22 @@ This code makes use of [numpy](https://github.com/numpy/numpy) and [pytorch](htt
 
 A feedforward neural network is trained on a subset of training examples selected randomly, while monitoring a validation score on some other random light curves. The neural network uses all 55 noisy light curves to predict the 55 relative radii directly. However, it does not use the stellar parameters, nor does it use any additional physics knowledge or ML technique to do so.
 
-A first [score of 9505 was recorded on April 12](https://www.ariel-datachallenge.space/ML/leaderboard/) using only 512 training samples and 512 validation samples.
+History:
+- A first score of 9505 was recorded on April 12 using only 512 training samples and 512 validation samples.
+- April 26th: A typo was identified in the preprocessing function during the cropping stage (many thanks to the participant who spotted it!). The preprocessing has been simplified, ignoring any cropping or ramp correction. In addition to this change, the validation set was set to 1024, the optimiser's learning rate to 0.0005 and a random seed (0) was set for repeatability in the dataset shuffling. The corresponding [new score is 9617](https://www.ariel-datachallenge.space/ML/leaderboard/).
 
 ## Preprocessing
 
 The noisy light curves undergo the following preprocessing steps:
 
-- i) the first 30 points of each light curve are replaced by 1 to reduce the impact from the ramps
-- ii) 1 is removed to all light curve to have the asymptotic stellar flux centred around 0.
-- iii) values are rescaled by dividing by 0.06 for the standard deviation to be closer to unity.
+- i) 1 is removed to all light curve to have the asymptotic stellar flux centred around 0.
+- ii) values are rescaled by dividing by 0.04 for the standard deviation to be closer to unity.
 
 ## Model & training hyperparaneters
 
 We used a fully connected feedforward neural network of 2 hidden layers, made of 1024 and 256 units and both followed by Relu activation functions. The dimensions of the input and output layers are constrained by the input and output format, thus with 300*55 units and 55 units respecively.
 
-The model was trained by minimizing the average MSE across all wavelengths using the ADAM optimizer with a learning rate of 0.001 and beta parameters of (0.9, 0.999) (Pytorch defaults values). Training is performed until clearly overfitting, and the parameters associated with the highest validation score sare saved for later evaluation.
+The model was trained by minimizing the average MSE across all wavelengths using the ADAM optimizer with a learning rate of 0.0005 and beta parameters of (0.9, 0.999) (Pytorch defaults values). Training is performed until clearly overfitting, and the parameters associated with the highest validation score sare saved for later evaluation.
 
 ## What this baseline does not
 None of these have been performed to produce thie baseline, leaving several potential ways for improvement:
